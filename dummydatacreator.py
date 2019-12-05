@@ -3,6 +3,8 @@
 import random
 import numpy as np
 from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
+from shapely.ops import cascaded_union
 def GenerateWellConceptName():    
     '''Creates a well concept name, using random characters and digits
     
@@ -93,3 +95,41 @@ def GenerateWellConcept(poly):
             break
     
     return [wc_name, [wc_x, wc_y], wc_resource]
+
+
+def GenerateMultipleWellConceptsTEST(input_gdf_polygons, n_concepts = 100, lon_min = -60.45, lon_max = -60.30,                          lat_min = 10.00, lat_max = 10.20):
+
+    '''Function generates a list of well concepts. Not that there is a slight workaround in this method, see below. Hence it has been labelled TEST
+    
+    Parameters
+    ----------
+    input_gdf_polygons
+        GeoDataFrame with a polygon geometry column
+    
+    n_concepts
+        Number of well concepts to return
+        
+    Returns
+    -------
+    list: [[WC Names], [WC Lat Lon], [WC Resource]]   - where len([WC Names, WC Lat Lon  and WC Resource 
+    '''
+    l = []
+    #BUG WORKAROUND FIX- Some polygons are invalid since first and last points are the same - they must not be.
+    for p in input_gdf_polygons.polygon.values:
+        if p.is_valid == True:
+            l.append(p)
+
+    # Union of all polygons
+    targ_poly_union = cascaded_union(l)
+    
+    
+    #Generate a polygon bounding box from the min and max of lon and lat
+    bbox = Polygon([[lon_min,lat_min], [lon_min,lat_max], [lon_max, lat_max], [lon_max, lat_min]])
+    
+    # Get all polygons within bbx
+    bbox = bbox.intersection(targ_poly_union)
+    
+    #Generate Well Concepts
+    WellConcepts = [GenerateWellConcept(bbox)  for i in range(n_concepts)]
+
+    return list(zip(*WellConcepts))
