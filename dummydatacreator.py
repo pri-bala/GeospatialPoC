@@ -28,7 +28,7 @@ def GenerateWellConceptName():
         strName += chr(random.randrange(66,69)).lower()
         
     #Final numbers
-    strName += "-" + str(random.randrange(0,23))
+    strName += "-" + str(random.randrange(0,999))
     
     return strName
 
