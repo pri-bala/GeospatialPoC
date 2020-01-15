@@ -97,7 +97,7 @@ def GenerateWellConcept(poly):
     return [wc_name, [wc_x, wc_y], wc_resource]
 
 
-def GenerateMultipleWellConceptsTEST(input_gdf_polygons, n_concepts = 100, lon_min = -60.45, lon_max = -60.30,                          lat_min = 10.00, lat_max = 10.20):
+def GenerateMultipleWellConceptsTEST(input_gdf_polygons, n_concepts = 100, lon_min = 139.4, lon_max = 140.0, lat_min =29.8, lat_max = 30.5):
 
     '''Function generates a list of well concepts. Not that there is a slight workaround in this method, see below. Hence it has been labelled TEST
     
